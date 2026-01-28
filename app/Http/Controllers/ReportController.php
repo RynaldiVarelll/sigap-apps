@@ -9,9 +9,14 @@ use Illuminate\Support\Facades\Auth;
 class ReportController extends Controller
 {
     // 1. Menampilkan halaman form laporan
-    public function index()
-    {
-        return view('user.lapor');
+    public function index() 
+    { 
+
+        // LOGIKA: Ambil laporan DIMANA (Where) id pemiliknya == ID saya yang sedang login
+        $myReports = Report::where('user_id', Auth::id()) 
+                        ->orderBy('created_at', 'desc')
+                        ->get(); 
+        return view('user.lapor', compact('myReports')); 
     }
 
     // 2. Menyimpan data laporan + upload foto

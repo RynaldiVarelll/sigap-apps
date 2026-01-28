@@ -7,7 +7,12 @@
     <div class="col-md-4">
         <div class="card">
             <div class="card-header">Silakan Masuk</div>
-
+            <div class="card-body">
+                @if ($errors->any())
+                    <div class="alert alert-danger">
+                        {{ $errors->first() }}
+                    </div>
+                    @endif
             <div class="card-body">
                 <form action="{{ route('login.store') }}" method="POST">
                     @csrf
