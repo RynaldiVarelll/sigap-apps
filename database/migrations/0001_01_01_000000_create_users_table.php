@@ -9,27 +9,24 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
+        public function up(): void
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-
-            // Identitas (NIK / NIS) - wajib unik
-            $table->string('identity_number')->unique();
-
-            // Data dasar user
+            // --- TAMBAHAN KOLOM BARU ---
+            $table->string('nik')->nullable()->unique();
             $table->string('name');
-            $table->string('email')->unique();
+            $table->string('username')->unique(); // Login pakai ini
+            $table->string('telp')->nullable();
+            $table->enum('role', ['admin', 'masyarakat']);
+            // ---------------------------
+            $table->string('email')->nullable();
+            $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->string('phone')->nullable(); // boleh kosong
-
-            // Role / Jabatan
-            $table->enum('role', ['admin', 'petugas', 'masyarakat'])
-                ->default('masyarakat');
-
             $table->rememberToken();
             $table->timestamps();
-        });
+     });
+
 
         //BATAS
 

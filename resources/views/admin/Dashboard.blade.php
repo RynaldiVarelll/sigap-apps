@@ -8,6 +8,10 @@
     <div class="card-header bg-primary text-white">Data Laporan Masuk</div> 
     <div class="card-body"> 
 
+    <a href="{{ route('report.export') }}" class="btn btn-danger mb-3">
+        Download PDF
+    </a>
+
         <table class="table table-bordered table-striped"> 
             <thead> 
                 <tr> 
@@ -48,7 +52,7 @@
                     </td> 
 
                     <td> 
-                        <a href="#" class="btn btn-info btn-sm">Cek Detail</a>
+                        <a href="{{ route('report.show', $report->id) }}" class="btn btn-info btn-sm text-white">Cek Detail</a>
                     </td> 
                 </tr> 
                 @empty 
