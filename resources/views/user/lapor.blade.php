@@ -27,6 +27,16 @@
                 Tulis Laporan Baru
             </div>
 
+        @if ($errors->any())
+            <div style="color:red; margin-bottom:15px;">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
             <div class="card-body">
                 <form action="{{ route('user.lapor.store') }}"
                       method="POST"

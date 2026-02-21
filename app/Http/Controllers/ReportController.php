@@ -28,7 +28,7 @@ class ReportController extends Controller
         $request->validate([
             'title'       => 'required|max:255',
             'description' => 'required',
-            'image'       => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'image'       => 'nullable|image|mimes:jpg,jpeg,png|max:5120',
         ]);
 
         // B. Proses upload foto
