@@ -1,6 +1,17 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
+    {{-- KONFIGURASI PWA AGAR BISA DI-INSTALL --}}
+    <link rel="manifest" href="{{ asset('manifest.json') }}">
+    <meta name="theme-color" content="#0d6efd">
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js');
+            });
+        }
+    </script>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title') - SIGAP</title>
@@ -21,47 +32,56 @@
         <div class="collapse navbar-collapse">
             <ul class="navbar-nav ms-auto">
 
-                @guest
-    <li class="nav-item">
-        <a class="nav-link text-white" href="{{ route('login') }}">
-            Login
-        </a>
-    </li>
+    {{-- LOGIKA 1: Jika yang datang adalah TAMU --}}
+    @guest
+        <li class="nav-item">
+            <a class="nav-link text-white" href="{{ route('login') }}">
+                Login
+            </a>
+        </li>
 
-    <li class="nav-item">
-        <a class="nav-link text-white" href="{{ route('register') }}">
-            Daftar Akun
-        </a>
-    </li>
-@endguest
+        <li class="nav-item">
+            <a class="nav-link text-white" href="{{ route('register') }}">
+                Daftar Akun
+            </a>
+        </li>
+    @endguest
 
 
-                @auth
-                    @if (Auth::user()->role == 'admin')
-                        <li class="nav-item">
-                            <a class="nav-link textwhite" href="{{ route('admin.dashboard') }}">
-                                Dashboard Admin
-                            </a>
-                        </li>
-                    @endif
+    {{-- LOGIKA 2: Jika yang datang adalah PENGGUNA RESMI --}}
+    @auth
 
-                    <li class="nav-item">
-                        <a class="nav-link text-white" href="{{ route('user.lapor') }}">
-                            Buat Laporan
-                        </a>
-                    </li>
+        {{-- Jika dia ADMIN --}}
+        @if(Auth::user()->role == 'admin')
+            <li class="nav-item">
+                <a class="nav-link text-white fw-bold" href="{{ route('admin.dashboard') }}">
+                    Dashboard Admin
+                </a>
+            </li>
 
-                    <li class="nav-item ms-2">
-                        <form action="{{ route('logout') }}" method="POST">
-                            @csrf
-                            <button class="btn btn-danger btn-sm mt-1">
-                                Logout
-                            </button>
-                        </form>
-                    </li>
-                @endauth
+        {{-- Jika dia WARGA --}}
+        @elseif(Auth::user()->role == 'warga')
+            <li class="nav-item">
+                <a class="nav-link text-white" href="{{ route('user.lapor') }}">
+                    Tulis Pengaduan
+                </a>
+            </li>
+        @endif
 
-            </ul>
+
+        {{-- Tombol Logout --}}
+        <li class="nav-item ms-2">
+            <form action="{{ route('logout') }}" method="POST">
+                @csrf
+                <button type="submit"
+                        class="btn btn-danger btn-sm mt-1 rounded-pill px-3">
+                    Logout
+                </button>
+            </form>
+        </li>
+
+    @endauth
+</ul>
         </div>
     </div>
 </nav>

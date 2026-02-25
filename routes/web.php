@@ -1,19 +1,24 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\ResponseController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\ResponseController;
+use Illuminate\Support\Facades\Route;
 
-// Redirect otomatis ke login
+/*
+|--------------------------------------------------------------------------
+| [1] RUANG TAMU (LANDING PAGE)
+|--------------------------------------------------------------------------
+*/
 Route::get('/', function () {
-    return redirect()->route('login');
+    return view('welcome');
 });
 
-
-// =====================
-// GUEST (belum login)
-// =====================
+/*
+|--------------------------------------------------------------------------
+| [2] JALUR TAMU (Guest / Belum Login)
+|--------------------------------------------------------------------------
+*/
 Route::middleware('guest')->group(function () {
 
     Route::get('/login', [AuthController::class, 'showLoginForm'])
@@ -29,44 +34,43 @@ Route::middleware('guest')->group(function () {
         ->name('register.store');
 });
 
-
-// =====================
-// AUTH (sudah login)
-// =====================
+/*
+|--------------------------------------------------------------------------
+| [3] JALUR MEMBER (Auth / Sudah Login)
+|--------------------------------------------------------------------------
+*/
 Route::middleware('auth')->group(function () {
 
     Route::post('/logout', [AuthController::class, 'logout'])
         ->name('logout');
 
-    Route::get('/report/export/pdf', [ReportController::class,'exportPdf'])->name('report.export');
-
-    // Dashboard admin
+    // ======================
+    // 🔹 Rute Khusus Admin
+    // ======================
     Route::get('/admin/dashboard', [AuthController::class, 'dashboard'])
         ->name('admin.dashboard');
 
-    // Dashboard warga
-    Route::get('/warga/dashboard', function () {
-        return 'Halo Warga! Ini halaman kamu.';
-    })->name('user.dashboard');
+    Route::get('/report/export/pdf', [ReportController::class, 'exportPdf'])
+        ->name('report.export');
 
-    // Laporan warga
+    Route::post('/response', [ResponseController::class, 'store'])
+        ->name('response.store');
+
+    // ======================
+    // 🔹 Rute Khusus Warga
+    // ======================
     Route::get('/lapor', [ReportController::class, 'index'])
         ->name('user.lapor');
 
     Route::post('/lapor', [ReportController::class, 'store'])
         ->name('user.lapor.store');
 
-    // Detail laporan
+    // ======================
+    // 🔹 Detail & Update Report
+    // ======================
     Route::get('/report/{report}', [ReportController::class, 'show'])
         ->name('report.show');
 
-    // Update status laporan
     Route::put('/report/{report}', [ReportController::class, 'update'])
         ->name('report.update');
-
-    // =====================
-    // TANGGAPAN ADMIN (FIX)
-    // =====================
-    Route::post('/response/store', [ResponseController::class, 'store'])
-        ->name('response.store');
 });
